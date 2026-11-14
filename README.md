@@ -6,7 +6,7 @@
 Runs entirely in the browser. Your files never leave your device.
 
 [![Live Demo](https://img.shields.io/badge/Live-pdfstudio--free.netlify.app-2d6bff?style=for-the-badge&logo=netlify)](https://pdfstudio-free.netlify.app)
-[![Deploy to Netlify](https://img.shields.io/badge/Deploy-Netlify-00c7b7?style=for-the-badge&logo=netlify)](https://app.netlify.com/start/deploy?repository=https://github.com/shivamkr8135/pdfstudio-free)
+[![Deploy to Netlify](https://img.shields.io/badge/Deploy-Netlify-00c7b7?style=for-the-badge&logo=netlify)](https://app.netlify.com/start/deploy?repository=https://github.com/shivamkumar0097/pdfstudio-free)
 [![React](https://img.shields.io/badge/React-19-61dafb?style=for-the-badge&logo=react&logoColor=20232a)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-8-646cff?style=for-the-badge&logo=vite&logoColor=20232a)](https://vite.dev)
 [![License](https://img.shields.io/badge/License-MIT-111111?style=for-the-badge)](#license)
@@ -144,7 +144,7 @@ pdf-tools/
 ## 🚀 Run it locally
 
 ```bash
-git clone https://github.com/shivamkr8135/pdfstudio-free.git
+git clone https://github.com/shivamkumar0097/pdfstudio-free.git
 cd pdfstudio-free
 npm install
 npm run dev      # http://localhost:5173
@@ -219,4 +219,4 @@ Or connect the GitHub repo in **Netlify → Add new site → Import an existing 
 
 ## 📄 License
 
-MIT © [Shivam Kumar](https://github.com/shivamkr8135)
+MIT © [Shivam Kumar](https://github.com/shivamkumar0097)
