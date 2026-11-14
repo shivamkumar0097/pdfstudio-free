@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+}
+
+html,
+body {
+  overflow-anchor: none;
+}
+
+#root {
+  min-height: 100svh;
+}

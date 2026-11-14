@@ -1,0 +1,14 @@
+{
+  "name": "PDF Studio — Free Browser PDF Tools",
+  "short_name": "PDF Studio",
+  "description": "Merge, split, rotate, crop, compress and convert PDFs privately in your browser. No uploads, no sign-up.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#12103A",
+  "theme_color": "#12103A",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

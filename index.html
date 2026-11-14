@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Free PDF tools that run inside your browser. Merge, split, rotate, compress, watermark, convert PDFs and more — your files never leave your device."
+    />
+    <meta name="theme-color" content="#FFFFFF" />
+    <script>
+      // Set the theme before first paint so there is no flash of the wrong one.
+      ;(function () {
+        try {
+          document.documentElement.dataset.theme =
+            localStorage.getItem('pdfstudio-theme') === 'dark' ? 'dark' : 'light'
+        } catch (e) {
+          document.documentElement.dataset.theme = 'light'
+        }
+      })()
+    </script>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="PDF Studio" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="PDF Studio — Free Browser PDF Tools" />
+    <meta
+      property="og:description"
+      content="Merge, split, rotate, compress and convert PDFs privately in your browser. No uploads, no sign-up."
+    />
+    <title>PDF Studio — Free Browser PDF Tools</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
