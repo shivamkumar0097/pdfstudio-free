@@ -28,14 +28,6 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Check Netlify access
-        run: |
-          echo "--- token / user ---"
-          curl -s -o /tmp/user.json -w "status=%{http_code}\n" -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" https://api.netlify.com/api/v1/user
-          head -c 400 /tmp/user.json; echo
-          echo "--- site ---"
-          curl -s -o /tmp/site.json -w "status=%{http_code}\n" -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID
-          head -c 600 /tmp/site.json; echo
       - name: Deploy to Netlify
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
