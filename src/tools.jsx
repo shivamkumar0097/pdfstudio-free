@@ -19,6 +19,28 @@ const loadPdfjs = () => {
   return pdfjsPromise
 }
 const pdfjsGet = async (opts) => (await loadPdfjs()).getDocument(opts)
+// getDocument() gives a loading task, the document itself is its .promise
+const openPdf = async (file) => {
+  const loadingTask = await pdfjsGet({ data: new Uint8Array(await file.arrayBuffer()) })
+  const doc = await loadingTask.promise
+  doc.pdfjsTask = loadingTask
+  return doc
+}
+
+// pdf.js v6 removed doc.destroy(): free the document and shut its worker down
+const closePdf = async (doc) => {
+  if (!doc) return
+  try {
+    await doc.cleanup?.()
+  } catch {
+    /* nothing to clean up */
+  }
+  try {
+    await doc.pdfjsTask?.destroy()
+  } catch {
+    /* already closed */
+  }
+}
 
 /* ============ Helpers ============ */
 let counter = 0
@@ -169,7 +191,7 @@ function useJob() {
   }
 }
 
-function usePdfFile(job) {
+function usePdfFile(job, { images = true } = {}) {
   const [file, setFile] = useState(null)
   const [source, setSource] = useState(null)
   const [kind, setKind] = useState('pdf')
@@ -177,6 +199,11 @@ function usePdfFile(job) {
   const pick = async (arr) => {
     const f = arr[0]
     const img = isImage(f) && !isPdf(f)
+    if (img && !images) {
+      job.reset()
+      job.fail('Only PDFs, not images.')
+      return
+    }
     job.reset()
     setFile(null)
     setSource(f)
@@ -210,18 +237,19 @@ function usePdfFile(job) {
   useEffect(() => {
     const dropped = takePending()
     if (!dropped.length) return
-    const f = dropped.find(isPdfOrImage)
+    const f = dropped.find(images ? isPdfOrImage : isPdf)
     if (f) pickRef.current([f])
-  }, [])
-  return { file, source, kind, pages, pick, clear }
+  }, [images])
+  return { file, source, kind, pages, pick, clear, fail: job.fail }
 }
 
-function Dropzone({ test, attr, multiple, onFiles, label, hint }) {
+function Dropzone({ test, attr, multiple, onFiles, onReject, label, hint }) {
   const [over, setOver] = useState(false)
   const input = useRef(null)
   const take = (list) => {
     const arr = [...list].filter(test)
     if (arr.length) onFiles(multiple ? arr : [arr[0]])
+    else onReject?.()
   }
   return (
     <div
@@ -338,15 +366,20 @@ function FileRows({ files, setFiles }) {
   )
 }
 
-function PdfPicker({ pdf }) {
+function PdfPicker({ pdf, images = true }) {
   if (!pdf.file) {
     return (
       <Dropzone
-        test={isPdfOrImage}
-        attr="application/pdf,.pdf,image/*"
+        test={images ? isPdfOrImage : isPdf}
+        attr={images ? 'application/pdf,.pdf,image/*' : 'application/pdf,.pdf'}
         onFiles={pdf.pick}
-        label="Drop a PDF or image here, or click to choose"
-        hint="PDF, JPG, PNG and WEBP are supported. Your file never leaves this device."
+        onReject={images ? undefined : () => pdf.fail('Only PDFs, not images.')}
+        label={images ? 'Drop a PDF or image here, or click to choose' : 'Drop a PDF here, or click to choose'}
+        hint={
+          images
+            ? 'PDF, JPG, PNG and WEBP are supported. Your file never leaves this device.'
+            : 'PDF files only. Your file never leaves this device.'
+        }
       />
     )
   }
@@ -394,8 +427,7 @@ function Preview({ blob }) {
     let dead = false
     ;(async () => {
       try {
-        const buf = await blob.arrayBuffer()
-        const doc = await await pdfjsGet({ data: new Uint8Array(buf) }).promise
+        const doc = await openPdf(blob)
         const page = await doc.getPage(1)
         const viewport = page.getViewport({ scale: 0.6 })
         const canvas = document.createElement('canvas')
@@ -406,7 +438,7 @@ function Preview({ blob }) {
         ctx.fillRect(0, 0, canvas.width, canvas.height)
         await page.render({ canvas, canvasContext: ctx, viewport }).promise
         if (!dead) setUrl(canvas.toDataURL('image/jpeg', 0.7))
-        doc.destroy()
+        await closePdf(doc)
       } catch (e) {
         console.error(e)
       }
@@ -673,6 +705,7 @@ export function ImagesToPdfTool() {
         attr="image/*"
         multiple
         onFiles={add}
+        onReject={() => job.fail('Only images, not PDFs.')}
         label="Drop images here or click to choose"
         hint="JPG, PNG, WEBP. Use the arrows to set the page order."
       />
@@ -702,14 +735,13 @@ export function ImagesToPdfTool() {
 /* ============ 5. PDF to Images ============ */
 export function PdfToImagesTool() {
   const job = useJob()
-  const pdf = usePdfFile(job)
+  const pdf = usePdfFile(job, { images: false })
   const [format, setFormat] = useState('png')
   const [scale, setScale] = useState(2)
 
   const go = () =>
     job.run(async (progress) => {
-      const buf = await pdf.file.arrayBuffer()
-      const doc = await await pdfjsGet({ data: new Uint8Array(buf) }).promise
+      const doc = await openPdf(pdf.file)
       const base = baseName(pdf.file.name)
       const mime = format === 'png' ? 'image/png' : 'image/jpeg'
       const zip = new JSZip()
@@ -732,14 +764,14 @@ export function PdfToImagesTool() {
         progress(Math.round((i / doc.numPages) * 100))
       }
       const n = doc.numPages
-      doc.destroy()
+      await closePdf(doc)
       if (single) return { blob: single, name: `${base}-page-1.${format}`, note: '1 image' }
       return { blob: await zip.generateAsync({ type: 'blob' }), name: `${base}-images.zip`, note: `${n} images in one zip` }
     })
 
   return (
     <>
-      <PdfPicker pdf={pdf} />
+      <PdfPicker pdf={pdf} images={false} />
       {pdf.file && (
         <div className="opts">
           <label className="field">
@@ -927,8 +959,7 @@ export function OrganizeTool() {
     ;(async () => {
       setLoading(true)
       try {
-        const buf = await pdf.file.arrayBuffer()
-        const doc = await await pdfjsGet({ data: new Uint8Array(buf) }).promise
+        const doc = await openPdf(pdf.file)
         const list = []
         for (let i = 1; i <= doc.numPages; i++) {
           if (dead) break
@@ -945,7 +976,7 @@ export function OrganizeTool() {
           canvas.width = 0
           canvas.height = 0
         }
-        doc.destroy()
+        await closePdf(doc)
         if (!dead) setItems(list)
       } catch (e) {
         console.error(e)
@@ -1048,8 +1079,7 @@ export function CompressTool() {
   const go = () =>
     job.run(async (progress) => {
       const { scale, q } = LEVELS[level]
-      const buf = await pdf.file.arrayBuffer()
-      const src = await await pdfjsGet({ data: new Uint8Array(buf) }).promise
+      const src = await openPdf(pdf.file)
       const out = await PDFDocument.create()
       for (let i = 1; i <= src.numPages; i++) {
         const page = await src.getPage(i)
@@ -1070,7 +1100,7 @@ export function CompressTool() {
         canvas.height = 0
         progress(Math.round((i / src.numPages) * 100))
       }
-      src.destroy()
+      await closePdf(src)
       const bytes = await out.save()
       const before = pdf.file.size
       const after = bytes.length
@@ -1109,8 +1139,7 @@ export function PdfToTextTool() {
 
   const go = () =>
     job.run(async (progress) => {
-      const buf = await pdf.file.arrayBuffer()
-      const doc = await await pdfjsGet({ data: new Uint8Array(buf) }).promise
+      const doc = await openPdf(pdf.file)
       let text = ''
       let letters = 0
       for (let i = 1; i <= doc.numPages; i++) {
@@ -1122,7 +1151,7 @@ export function PdfToTextTool() {
         progress(Math.round((i / doc.numPages) * 100))
       }
       const n = doc.numPages
-      doc.destroy()
+      await closePdf(doc)
       if (!letters) throw new Error('No text found. This PDF may be a scanned image.')
       return {
         blob: new Blob([text], { type: 'text/plain;charset=utf-8' }),
@@ -1514,7 +1543,7 @@ export function ResizeKbTool() {
         }
       }
 
-      const src = await await pdfjsGet({ data: new Uint8Array(await pdf.file.arrayBuffer()) }).promise
+      const src = await openPdf(pdf.file)
       let best = null
       try {
         for (let a = 0; a < SIZE_PLANS.length; a++) {
@@ -1556,7 +1585,7 @@ export function ResizeKbTool() {
           note: `Could not reach ${targetKb} KB. Closest was ${sizeText(best.bytes.length)}.`,
         }
       } finally {
-        src.destroy()
+        await closePdf(src)
       }
     })
 
