@@ -392,10 +392,14 @@ h1 {
   transform: translateX(-4px);
 }
 
-.shell h2 {
+.shell h1 {
   margin: 0;
   font-size: clamp(1.8rem, 5vw, 2.6rem);
   letter-spacing: -.02em;
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  color: var(--ink);
 }
 
 .lead {
@@ -1527,4 +1531,90 @@ section {
 
 .tool {
   animation-delay: calc(var(--i) * 40ms);
+}
+/* ---------- SEO text block ---------- */
+.seo {
+  margin-top: 42px;
+  padding-top: 30px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.seo-lead {
+  margin: 0 0 26px;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--ink);
+  opacity: .88;
+}
+
+.seo-h {
+  margin: 30px 0 12px;
+  font-size: 1.16rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+}
+
+.seo-steps {
+  margin: 0;
+  padding-left: 22px;
+  line-height: 1.7;
+}
+
+.seo-steps li {
+  margin-bottom: 8px;
+}
+
+.seo-faq details {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.seo-faq summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--ink);
+  list-style: none;
+}
+
+.seo-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.seo-faq summary::before {
+  content: '+';
+  display: inline-block;
+  width: 18px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.seo-faq details[open] summary::before {
+  content: '\2212';
+}
+
+.seo-faq p {
+  margin: 8px 0 0 18px;
+  line-height: 1.7;
+}
+
+.seo-rel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.seo-rel a {
+  padding: 9px 16px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: .94rem;
+  transition: border-color .25s, transform .25s;
+}
+
+.seo-rel a:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
 }

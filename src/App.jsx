@@ -1,13 +1,42 @@
 import { Suspense, useEffect, useRef, useState } from 'react'
 import './App.css'
-import { TOOLS, GROUP_ORDER, SOON } from './registry.jsx'
+import { TOOLS } from './registry.jsx'
+import { GROUP_ORDER, SOON } from './catalog.js'
 import { setPending, setLast, getLast, getRecent } from './dropbus.js'
 import { onToast } from './toast.js'
+import { SEO, PAGES, SITE } from './seo.js'
+import { SeoBlock } from './SeoBlock.jsx'
 
 const THEME_KEY = 'pdfstudio-theme'
 
 const isPdfFile = (f) => f.type === 'application/pdf' || /\.pdf$/i.test(f.name)
 const isImageFile = (f) => /^image\//.test(f.type) || /\.(jpe?g|png|webp|gif|bmp)$/i.test(f.name)
+
+// Real URLs like /pdf-to-images so every tool can be indexed on its own.
+const pathToId = (p) => {
+  const seg = (p || '').split('/').filter(Boolean)[0] || ''
+  return TOOLS.some((t) => t.id === seg) ? seg : ''
+}
+
+const setMeta = (attr, name, content) => {
+  let el = document.head.querySelector(`meta[${attr}="${name}"]`)
+  if (!el) {
+    el = document.createElement('meta')
+    el.setAttribute(attr, name)
+    document.head.appendChild(el)
+  }
+  el.setAttribute('content', content)
+}
+
+const setCanonical = (url) => {
+  let el = document.head.querySelector('link[rel="canonical"]')
+  if (!el) {
+    el = document.createElement('link')
+    el.rel = 'canonical'
+    document.head.appendChild(el)
+  }
+  el.href = url
+}
 
 // Pick the tool that fits the dropped files
 const pickTool = (files) => {
@@ -20,7 +49,7 @@ const pickTool = (files) => {
 }
 
 export default function App() {
-  const [id, setId] = useState(() => window.location.hash.slice(1))
+  const [id, setId] = useState(() => pathToId(window.location.pathname))
   const [q, setQ] = useState('')
   const [drag, setDrag] = useState(null)
   const [toasts, setToasts] = useState([])
@@ -69,16 +98,37 @@ export default function App() {
     }
   }, [theme])
 
-  // Browser back button works because the tool name is kept in the URL hash
+  // Browser back button works because the tool name is kept in the URL
   useEffect(() => {
-    const onHash = () => {
-      setId(window.location.hash.slice(1))
-      setRecent(getRecent())
+    const onPop = () => {
+      setId(pathToId(window.location.pathname))
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
-    window.addEventListener('hashchange', onHash)
-    return () => window.removeEventListener('hashchange', onHash)
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
   }, [])
+
+  // Old links with a hash still work: /#pdf-to-images becomes /pdf-to-images
+  useEffect(() => {
+    const h = window.location.hash.slice(1)
+    if (h && pathToId('/' + h)) history.replaceState({}, '', '/' + h)
+  }, [])
+
+  // Title, description and social tags follow the open tool
+  useEffect(() => {
+    const s = id ? SEO[id] : PAGES[0]
+    if (!s) return
+    const url = SITE.url + (id ? '/' + id : '/')
+    document.title = s.title
+    setMeta('name', 'description', s.desc)
+    setMeta('property', 'og:title', s.title)
+    setMeta('property', 'og:description', s.desc)
+    setMeta('property', 'og:url', url)
+    setMeta('name', 'twitter:card', 'summary_large_image')
+    setMeta('name', 'twitter:title', s.title)
+    setMeta('name', 'twitter:description', s.desc)
+    setCanonical(url)
+  }, [id])
 
   // Drop files anywhere on the page -> the right tool opens with the files
   useEffect(() => {
@@ -100,8 +150,9 @@ export default function App() {
       setPending(files)
       setLast(files[0])
       const target = pickTool(files)
+      history.pushState({}, '', target ? '/' + target : '/')
       setId(target)
-      window.location.hash = target
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       setTimeout(() => setRecent(getRecent()), 400)
     }
     window.addEventListener('dragover', over)
@@ -143,8 +194,15 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  const open = (tid) => window.location.assign(`#${tid}`)
-  const home = () => window.location.assign(window.location.pathname + window.location.search)
+  // Move between tools without reloading the page
+  const go = (tid) => {
+    const url = tid ? '/' + tid : '/'
+    if (window.location.pathname !== url) history.pushState({}, '', url)
+    setId(tid)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+  const open = (tid) => go(tid)
+  const home = () => go('')
 
   // Bring the last dropped file back into a tool
   const restore = () => {
@@ -152,8 +210,7 @@ export default function App() {
     if (!f) return
     setPending([f])
     const target = pickTool([f])
-    setId(target)
-    window.location.hash = target
+    go(target)
   }
 
 // Background colour of a theme (read without repainting)
@@ -269,9 +326,9 @@ const withAlpha = (hex, a) => {
             <button className="back rise" onClick={home}>
               ← All tools
             </button>
-            <h2 className="rise" style={{ '--d': 1 }}>
+            <h1 className="rise" style={{ '--d': 1 }}>
               {active.icon} {active.title}
-            </h2>
+            </h1>
             <p className="lead rise" style={{ '--d': 2 }}>
               {active.desc}
             </p>
@@ -280,6 +337,7 @@ const withAlpha = (hex, a) => {
                 <active.C />
               </Suspense>
             </div>
+            <SeoBlock id={active.id} data={SEO[active.id]} onGo={go} />
           </div>
         ) : (
           <>
@@ -385,7 +443,8 @@ const withAlpha = (hex, a) => {
                 </div>
               </>
             )}
-          </>
+
+            <SeoBlock data={PAGES[0]} onGo={go} />          </>
         )}
       </main>
 

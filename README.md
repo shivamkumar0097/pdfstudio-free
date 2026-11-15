@@ -156,6 +156,7 @@ npm run dev      # http://localhost:5173
 | `npm run build` | Production build into `dist/` |
 | `npm run preview` | Serve the production build locally |
 | `npm run lint` | ESLint (React Compiler rules included) |
+| `npm run og` | Regenerate the social preview images in `public/og/` |
 
 ---
 
@@ -202,7 +203,29 @@ Or connect the GitHub repo in **Netlify → Add new site → Import an existing 
 
 ---
 
-## 🗺️ Roadmap
+---
+
+## 🔍 SEO
+
+Every tool has its own real URL (`/pdf-to-images`, `/compress`, ...) instead of a hash,
+so each page can be indexed on its own.
+
+- `scripts/prerender.mjs` runs after `vite build` and writes one static HTML file per
+  tool with its own `<title>`, meta description, canonical link, Open Graph tags and
+  JSON-LD (`WebApplication` + `FAQPage` + `BreadcrumbList`).
+- `src/seo.js` holds the copy and `src/catalog.js` the tool list — both plain JS so the
+  build script can read them in Node.
+- The build also writes `dist/sitemap.xml` and `dist/robots.txt`.
+- The visible text under each tool is rendered by `src/SeoBlock.jsx`, so the live page
+  and the static HTML always match.
+- `public/og/` holds the social preview images (`npm run og` regenerates them).
+
+After deploying, submit `https://pdfstudio-free.netlify.app/sitemap.xml` in Google
+Search Console.
+
+---
+
+## Roadmap
 
 - [ ] Batch mode (many files at once for compress / rotate / merge)
 - [ ] Unlock PDF — remove a password

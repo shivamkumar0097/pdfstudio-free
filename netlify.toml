@@ -1,4 +1,4 @@
-[build]
+﻿[build]
   command = "npm run build"
   publish = "dist"
 
@@ -17,3 +17,91 @@
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Every tool has its own static HTML file, so search engines can read it.
+
+[[redirects]]
+from = "/merge"
+to = "/merge/index.html"
+status = 200
+
+[[redirects]]
+from = "/split"
+to = "/split/index.html"
+status = 200
+
+[[redirects]]
+from = "/organize"
+to = "/organize/index.html"
+status = 200
+
+[[redirects]]
+from = "/rotate"
+to = "/rotate/index.html"
+status = 200
+
+[[redirects]]
+from = "/reverse"
+to = "/reverse/index.html"
+status = 200
+
+[[redirects]]
+from = "/images-to-pdf"
+to = "/images-to-pdf/index.html"
+status = 200
+
+[[redirects]]
+from = "/pdf-to-images"
+to = "/pdf-to-images/index.html"
+status = 200
+
+[[redirects]]
+from = "/pdf-to-text"
+to = "/pdf-to-text/index.html"
+status = 200
+
+[[redirects]]
+from = "/watermark"
+to = "/watermark/index.html"
+status = 200
+
+[[redirects]]
+from = "/page-numbers"
+to = "/page-numbers/index.html"
+status = 200
+
+[[redirects]]
+from = "/crop"
+to = "/crop/index.html"
+status = 200
+
+[[redirects]]
+from = "/stamp"
+to = "/stamp/index.html"
+status = 200
+
+[[redirects]]
+from = "/compress"
+to = "/compress/index.html"
+status = 200
+
+[[redirects]]
+from = "/resize-kb"
+to = "/resize-kb/index.html"
+status = 200
+
+[[redirects]]
+from = "/metadata"
+to = "/metadata/index.html"
+status = 200
+
+[[redirects]]
+from = "/protect"
+to = "/protect/index.html"
+status = 200
+
+# Everything else falls back to the app.
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
