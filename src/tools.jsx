@@ -3,6 +3,7 @@ import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib'
 import JSZip from 'jszip'
 import { takePending, addRecent, setLast, getCurrentTool } from './dropbus.js'
 import { toast } from './toast.js'
+import Icon from './Icon.jsx'
 
 // pdf.js is ~1MB, so it is downloaded only when a tool really needs it.
 let pdfjsPromise
@@ -280,7 +281,7 @@ function Dropzone({ test, attr, multiple, onFiles, onReject, label, hint }) {
           e.target.value = ''
         }}
       />
-      <span className="drop-icon">⬆️</span>
+      <span className="drop-icon"><Icon name="upload" /></span>
       <b>{label}</b>
       <small>{hint}</small>
     </div>
@@ -341,13 +342,13 @@ function FileRows({ files, setFiles }) {
             }}
             onDragEnd={() => setDrag(null)}
           >
-            <span className="grip" aria-hidden="true">⠿</span>
+            <span className="grip" aria-hidden="true"><Icon name="grip" /></span>
             <span className="n">{i + 1}</span>
             <MiniThumb file={f.file} />
             <span className="nm" title={f.file.name}>{f.file.name}</span>
             <small>{sizeText(f.file.size)}</small>
-            <button onClick={() => move(i, -1)} disabled={i === 0} aria-label="Move up">↑</button>
-            <button onClick={() => move(i, 1)} disabled={i === files.length - 1} aria-label="Move down">↓</button>
+            <button onClick={() => move(i, -1)} disabled={i === 0} aria-label="Move up"><Icon name="arrowUp" /></button>
+            <button onClick={() => move(i, 1)} disabled={i === files.length - 1} aria-label="Move down"><Icon name="arrowDown" /></button>
             <button className="x" onClick={() => setFiles(files.filter((_, k) => k !== i))} aria-label="Remove">×</button>
           </li>
         ))}
@@ -387,7 +388,7 @@ function PdfPicker({ pdf, images = true }) {
   const size = pdf.source?.size || pdf.file.size
   return (
     <div className="file">
-      <span className="ico sm">{pdf.kind === 'image' ? '🖼️' : '📄'}</span>
+      <span className="ico sm"><Icon name={pdf.kind === 'image' ? 'image' : 'file'} /></span>
       <div>
         <b title={name}>{name}</b>
         <small>
@@ -472,11 +473,11 @@ function Status({ job }) {
       </div>
     )
   }
-  if (job.error) return <div className="status err" role="alert">⚠️ {job.error}</div>
+  if (job.error) return <div className="status err" role="alert"><Icon name="alert" /> {job.error}</div>
   if (job.result) {
     return (
       <div className="status" role="status" aria-live="polite">
-        <span className="big">✅</span>
+        <span className="big"><Icon name="check" /></span>
         <b>Done!</b>
         <p>
           {job.result.note} · {sizeText(job.result.blob.size)}
@@ -484,7 +485,7 @@ function Status({ job }) {
         <Preview key={`${job.result.name}-${job.result.blob.size}`} blob={job.result.blob} />
         <div className="actions">
           <button className="btn" onClick={() => save(job.result.blob, job.result.name)}>
-            ⬇ Download
+            <Icon name="download" /> Download
           </button>
           <button className="btn ghost" onClick={job.reset}>Hide</button>
         </div>
@@ -1320,7 +1321,7 @@ export function StampTool() {
         <>
           {img ? (
             <div className="file">
-              <span className="ico sm">🖼️</span>
+              <span className="ico sm"><Icon name="image" /></span>
               <div>
                 <b title={img.name}>{img.name}</b>
                 <small>{sizeText(img.size)}</small>

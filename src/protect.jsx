@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { PDFDocument } from 'pdf-lib-plus-encrypt'
 import { addRecent, setLast } from './dropbus.js'
 import { toast } from './toast.js'
+import Icon from './Icon.jsx'
 
 const baseName = (name) => name.replace(/\.[^.]+$/, '')
 const sizeText = (n) =>
@@ -161,7 +162,7 @@ export default function ProtectTool() {
               e.target.value = ''
             }}
           />
-          <span className="drop-icon">🔒</span>
+          <span className="drop-icon"><Icon name="file" /></span>
           <b>Drop your PDF here</b>
           <small>or click to choose a file</small>
         </div>
@@ -228,7 +229,7 @@ export default function ProtectTool() {
 
       <div className="actions">
         <button className="btn" onClick={go} disabled={busy || !file}>
-          🔒 Protect PDF
+          <Icon name="lock" /> Protect PDF
         </button>
         {file && (
           <button
@@ -260,20 +261,20 @@ export default function ProtectTool() {
 
       {!busy && error && (
         <div className="status err" role="alert">
-          ⚠️ {error}
+          <Icon name="alert" /> {error}
         </div>
       )}
 
       {!busy && done && (
         <div className="status" role="status" aria-live="polite">
-          <span className="big">🔒</span>
+          <span className="big"><Icon name="lock" /></span>
           <b>PDF protected!</b>
           <p>
             Password set · {sizeText(done.blob.size)}
           </p>
           <div className="actions">
             <button className="btn" onClick={() => save(done.blob, done.name)}>
-              ⬇ Download again
+              <Icon name="download" /> Download again
             </button>
           </div>
         </div>

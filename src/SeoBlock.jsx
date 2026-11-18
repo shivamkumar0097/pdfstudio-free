@@ -1,5 +1,6 @@
 import { TOOLS } from './registry.jsx'
 import { HOWTO } from './seo.js'
+import Icon from './Icon.jsx'
 
 // The text block under the tool. It is also written into the static HTML at
 // build time, so search engines see it without running any JavaScript.
@@ -48,7 +49,7 @@ export function SeoBlock({ id, data, onGo }) {
                   onGo(t.id)
                 }}
               >
-                <span aria-hidden="true">{t.icon}</span> {t.title}
+                <Icon name={t.icon} /> {t.title}
               </a>
             ))}
           </div>

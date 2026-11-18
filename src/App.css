@@ -209,7 +209,7 @@ footer {
 }
 
 .brand:hover .brand-logo {
-  transform: rotate(-8deg) scale(1.06);
+  transform: scale(1.06);
 }
 
 .brand-logo svg {
@@ -312,7 +312,7 @@ h1 {
 }
 
 .tool:hover .ico {
-  transform: scale(1.12) rotate(-6deg);
+  transform: scale(1.1);
 }
 
 .ico.sm {
@@ -904,6 +904,7 @@ button.pill:hover {
   opacity: .7;
   pointer-events: none;
   font-size: .95rem;
+  z-index: 2;
 }
 
 /* ---------- Search: liquid glass in the dark theme ---------- */
@@ -986,34 +987,41 @@ button.pill:hover {
 
 /* ---------- Search: blue accents in the light theme ---------- */
 :root[data-theme="light"] .search {
-  border-color: var(--gold-line);
-  background: rgba(37, 99, 235, .04);
-  box-shadow: 0 0 0 1px rgba(37, 99, 235, .05), 0 14px 40px -22px rgba(37, 99, 235, .5);
+  border: 1.5px solid rgba(59, 91, 219, .38);
+  background: linear-gradient(180deg, #FFFFFF, #E9EFFF);
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, .06),
+    0 16px 34px -20px rgba(59, 91, 219, .55),
+    inset 0 1px 0 #FFFFFF;
 }
 
 :root[data-theme="light"] .search:hover {
-  border-color: rgba(37, 99, 235, .5);
+  border-color: rgba(59, 91, 219, .55);
+  box-shadow:
+    0 2px 4px rgba(16, 24, 40, .07),
+    0 20px 38px -20px rgba(59, 91, 219, .6),
+    inset 0 1px 0 #FFFFFF;
 }
 
 :root[data-theme="light"] .search:focus {
-  border-color: var(--gold);
-  background: rgba(37, 99, 235, .06);
-  box-shadow: 0 0 0 4px var(--gold-soft), 0 18px 46px -18px rgba(37, 99, 235, .45);
+  border-color: var(--accent);
+  background: #FFFFFF;
+  box-shadow: 0 0 0 4px rgba(59, 91, 219, .14), 0 18px 42px -18px rgba(59, 91, 219, .55);
 }
 
 :root[data-theme="light"] .search-ico {
-  color: var(--gold);
+  color: var(--accent);
   opacity: 1;
 }
 
 :root[data-theme="light"] .search::placeholder {
-  color: rgba(37, 99, 235, .55);
+  color: #7A8499;
 }
 
 :root[data-theme="light"] .search-kbd {
-  color: var(--gold);
-  background: rgba(37, 99, 235, .08);
-  box-shadow: inset 0 0 0 1px var(--gold-line);
+  color: var(--accent);
+  background: #FFFFFF;
+  box-shadow: inset 0 0 0 1px rgba(59, 91, 219, .3);
 }
 
 .search-clear {
@@ -1067,34 +1075,148 @@ button.pill:hover {
 
 /* ================= NEW: light theme ================= */
 :root[data-theme="light"] {
-  --bg: #FFFFFF;
-  --ink: #0A0A0A;
-  --muted: #6E6E6E;
-  --accent: #0A0A0A;
+  --bg: #F4F6FC;
+  --ink: #101828;
+  --muted: #5B6478;
+  --accent: #3B5BDB;
   --on-accent: #FFFFFF;
-  --surface-1: rgba(10, 10, 10, .05);
-  --surface-2: rgba(10, 10, 10, .09);
-  --surface-3: rgba(10, 10, 10, .14);
-  --surface-4: rgba(10, 10, 10, .22);
-  --line: rgba(10, 10, 10, .16);
-  --line-strong: rgba(10, 10, 10, .32);
-  --shine: rgba(10, 10, 10, .08);
-  --accent-soft: rgba(10, 10, 10, .07);
-  --accent-glow: rgba(10, 10, 10, .16);
-  --blob-1: rgba(10, 10, 10, .06);
-  --blob-2: rgba(10, 10, 10, .035);
-  --gold: #2563EB;
-  --gold-soft: rgba(37, 99, 235, .14);
-  --gold-line: rgba(37, 99, 235, .28);
+  --surface-1: rgba(16, 24, 40, .035);
+  --surface-2: rgba(16, 24, 40, .06);
+  --surface-3: rgba(16, 24, 40, .1);
+  --surface-4: rgba(16, 24, 40, .18);
+  --line: rgba(16, 24, 40, .1);
+  --line-strong: rgba(16, 24, 40, .22);
+  --shine: rgba(255, 255, 255, .9);
+  --accent-soft: rgba(59, 91, 219, .08);
+  --accent-glow: rgba(59, 91, 219, .24);
+  --blob-1: rgba(59, 91, 219, .14);
+  --blob-2: rgba(147, 197, 253, .24);
+  --gold: #3B5BDB;
+  --gold-soft: rgba(59, 91, 219, .1);
+  --gold-line: rgba(59, 91, 219, .26);
   --brand-1: #C8102E;
-  --brand-2: #7C1024;
+  --brand-2: #8A1226;
   --brand-glyph: #FFFFFF;
-  --brand-glow: rgba(200, 16, 46, .45);
-  --progress-1: #2563EB;
+  --brand-glow: rgba(200, 16, 46, .35);
+  --progress-1: #3B5BDB;
   --progress-2: #93C5FD;
-  --progress-glow: rgba(37, 99, 235, .55);
-  --glass: linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(255, 255, 255, .78));
-  --edge: inset 0 1px 0 #fff, inset 0 0 0 1px rgba(10, 10, 10, .08), 0 18px 40px -18px rgba(0, 0, 0, .28);
+  --progress-glow: rgba(59, 91, 219, .45);
+  --glass: linear-gradient(135deg, #FFFFFF, #F7F9FE);
+  --edge: inset 0 1px 0 #FFFFFF, inset 0 0 0 1px rgba(16, 24, 40, .06), 0 16px 36px -22px rgba(23, 43, 99, .35);
+}
+
+/* Coloured surfaces so the light theme is not all white-on-white */
+:root[data-theme="light"] .tool {
+  background: linear-gradient(160deg, #FFFFFF, #F6F8FF);
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, .05),
+    0 14px 32px -22px rgba(23, 43, 99, .45),
+    inset 0 0 0 1px rgba(16, 24, 40, .06);
+}
+
+:root[data-theme="light"] .tool:hover {
+  box-shadow:
+    0 2px 4px rgba(16, 24, 40, .06),
+    0 26px 46px -22px rgba(59, 91, 219, .4),
+    inset 0 0 0 1px rgba(59, 91, 219, .3);
+}
+
+:root[data-theme="light"] .tool .ico {
+  color: var(--accent);
+  background: linear-gradient(145deg, rgba(59, 91, 219, .12), rgba(147, 197, 253, .18));
+  box-shadow: inset 0 0 0 1px rgba(59, 91, 219, .18);
+}
+
+:root[data-theme="light"] .tool:hover .ico {
+  color: #FFFFFF;
+  background: linear-gradient(145deg, #3B5BDB, #6D8BFF);
+  box-shadow: 0 10px 20px -10px rgba(59, 91, 219, .65);
+}
+
+:root[data-theme="light"] .tool.soon {
+  background: #FAFBFE;
+  box-shadow: inset 0 0 0 1px rgba(16, 24, 40, .05);
+}
+
+:root[data-theme="light"] .panel {
+  background: linear-gradient(170deg, #FFFFFF, #F8FAFF);
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, .05),
+    0 20px 44px -28px rgba(23, 43, 99, .4),
+    inset 0 0 0 1px rgba(16, 24, 40, .06);
+}
+
+:root[data-theme="light"] .heading {
+  color: var(--accent);
+}
+
+:root[data-theme="light"] .drop {
+  border-color: rgba(59, 91, 219, .3);
+  background: linear-gradient(160deg, rgba(59, 91, 219, .05), rgba(147, 197, 253, .1));
+}
+
+:root[data-theme="light"] .drop:hover,
+:root[data-theme="light"] .drop.over {
+  border-color: var(--accent);
+  background: rgba(59, 91, 219, .1);
+}
+
+:root[data-theme="light"] .drop-icon {
+  color: var(--accent);
+}
+
+:root[data-theme="light"] .file {
+  background: rgba(16, 24, 40, .03);
+  box-shadow: inset 0 0 0 1px rgba(16, 24, 40, .05);
+}
+
+:root[data-theme="light"] .file .ico.sm {
+  color: var(--accent);
+  background: rgba(59, 91, 219, .1);
+  box-shadow: inset 0 0 0 1px rgba(59, 91, 219, .18);
+}
+
+:root[data-theme="light"] .chip {
+  background: #FFFFFF;
+  box-shadow: 0 8px 18px -16px rgba(23, 43, 99, .55);
+}
+
+:root[data-theme="light"] .chip:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+:root[data-theme="light"] .pill {
+  background: #FFFFFF;
+  box-shadow: inset 0 0 0 1px rgba(16, 24, 40, .08), 0 8px 18px -16px rgba(23, 43, 99, .55);
+}
+
+:root[data-theme="light"] .status {
+  background: linear-gradient(165deg, rgba(59, 91, 219, .06), #FFFFFF 70%);
+  box-shadow: inset 0 0 0 1px rgba(59, 91, 219, .12);
+}
+
+:root[data-theme="light"] .status.err {
+  color: #B42318;
+  background: #FEF3F2;
+  box-shadow: inset 0 0 0 1px #FECDCA;
+}
+
+:root[data-theme="light"] .toast.err {
+  color: #FFFFFF;
+  background: #B42318;
+}
+
+:root[data-theme="light"] .seg button.on {
+  box-shadow: 0 8px 18px -10px rgba(59, 91, 219, .7);
+}
+
+:root[data-theme="light"] .btn.ghost {
+  background: #FFFFFF;
+}
+
+:root[data-theme="light"] .theme-btn {
+  background: #FFFFFF;
 }
 
 :where(:root[data-theme="light"]) .bg i:nth-child(1) {
@@ -1361,7 +1483,7 @@ button.pill:hover {
 }
 
 .theme-btn:hover {
-  transform: scale(1.09) rotate(-10deg);
+  transform: scale(1.09);
   border-color: var(--accent);
 }
 
@@ -1617,4 +1739,96 @@ section {
 .seo-rel a:hover {
   border-color: var(--accent);
   transform: translateY(-2px);
+}
+
+/* ---------- Real line icons ---------- */
+.ic {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  flex: none;
+  vertical-align: -.125em;
+}
+
+.btn .ic,
+.seo-rel .ic,
+.chip .ic,
+.pill .ic,
+.status .ic {
+  margin-right: 2px;
+}
+
+.theme-btn .ic {
+  width: 18px;
+  height: 18px;
+  vertical-align: 0;
+}
+
+.search-ico .ic {
+  display: block;
+}
+
+.drop-icon .ic {
+  width: 1em;
+  height: 1em;
+  vertical-align: 0;
+}
+
+.status .big .ic {
+  width: 1em;
+  height: 1em;
+  vertical-align: 0;
+}
+
+.grip .ic {
+  width: 1em;
+  height: 1em;
+  vertical-align: 0;
+}
+
+/* ---------- Gold symbols in the dark theme ---------- */
+:root:not([data-theme="light"]) .tool .ico {
+  color: var(--gold);
+  background: linear-gradient(145deg, rgba(227, 196, 122, .16), rgba(227, 196, 122, .06));
+  box-shadow: inset 0 0 0 1px var(--gold-line);
+}
+
+:root:not([data-theme="light"]) .tool:hover .ico {
+  color: #0B0B0B;
+  background: linear-gradient(145deg, #E3C47A, #FFF0BE);
+  box-shadow: 0 10px 22px -10px rgba(227, 196, 122, .55);
+}
+
+:root:not([data-theme="light"]) .drop-icon {
+  color: var(--gold);
+}
+
+:root:not([data-theme="light"]) .file .ico.sm {
+  color: var(--gold);
+  background: rgba(227, 196, 122, .1);
+  box-shadow: inset 0 0 0 1px var(--gold-line);
+}
+
+:root:not([data-theme="light"]) .heading {
+  color: var(--gold);
+}
+
+:root:not([data-theme="light"]) .chip:hover {
+  color: var(--gold);
+  border-color: var(--gold-line);
+}
+
+/* ---------- Mobile: no zoom, no accidental text selection ---------- */
+html,
+body {
+  touch-action: pan-x pan-y;
+}
+
+@media (max-width: 640px) {
+  .search,
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
 }

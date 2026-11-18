@@ -6,6 +6,7 @@ import { setPending, setLast, getLast, getRecent } from './dropbus.js'
 import { onToast } from './toast.js'
 import { SEO, PAGES, SITE } from './seo.js'
 import { SeoBlock } from './SeoBlock.jsx'
+import Icon from './Icon.jsx'
 
 const THEME_KEY = 'pdfstudio-theme'
 
@@ -301,7 +302,7 @@ const withAlpha = (hex, a) => {
         <div className="right">
           {getLast() && (
             <button className="pill" onClick={restore} title="Open the last file again">
-              ↩ Restore last file
+              <Icon name="restore" /> Restore last file
             </button>
           )}
           {!active && (
@@ -311,11 +312,11 @@ const withAlpha = (hex, a) => {
               aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
               title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
             >
-              {theme === 'dark' ? '☀️' : '🌙'}
+              <Icon name={theme === 'dark' ? 'sun' : 'moon'} />
             </button>
           )}
           <span className="pill hide-sm" title="All processing happens locally in your browser">
-            🔒 Files never leave your device
+            <Icon name="lock" /> Files never leave your device
           </span>
         </div>
       </div>
@@ -324,10 +325,10 @@ const withAlpha = (hex, a) => {
         {active ? (
           <div className="shell" key={active.id}>
             <button className="back rise" onClick={home}>
-              ← All tools
+              <Icon name="arrowLeft" /> All tools
             </button>
             <h1 className="rise" style={{ '--d': 1 }}>
-              {active.icon} {active.title}
+              <Icon name={active.icon} /> {active.title}
             </h1>
             <p className="lead rise" style={{ '--d': 2 }}>
               {active.desc}
@@ -350,7 +351,7 @@ const withAlpha = (hex, a) => {
               </p>
               <div className="searchwrap rise" style={{ '--d': 2 }}>
                 <span className="search-ico" aria-hidden="true">
-                  🔍
+                  <Icon name="search" />
                 </span>
                 <input
                   ref={searchRef}
@@ -398,7 +399,7 @@ const withAlpha = (hex, a) => {
                       onMouseMove={tilt}
                       onMouseLeave={untilt}
                     >
-                      <div className="ico">{t.icon}</div>
+                      <div className="ico"><Icon name={t.icon} /></div>
                       <h3>{t.title}</h3>
                       <p>{t.desc}</p>
                     </button>
@@ -420,7 +421,7 @@ const withAlpha = (hex, a) => {
                       title={'Open ' + r.tool}
                       onClick={() => open(r.tool)}
                     >
-                      📄 {r.name}
+                      <Icon name="file" /> {r.name}
                     </button>
                   ))}
                 </div>
@@ -433,7 +434,7 @@ const withAlpha = (hex, a) => {
                 <div className="tools">
                   {SOON.map((t, i) => (
                     <div key={t.title} className="tool soon" style={{ '--i': i }}>
-                      <div className="ico">{t.icon}</div>
+                      <div className="ico"><Icon name={t.icon} /></div>
                       <h3>
                         {t.title} <span className="badge">Soon</span>
                       </h3>
@@ -453,7 +454,7 @@ const withAlpha = (hex, a) => {
       {drag && (
         <div className="dropveil">
           <div className="dropveil-in">
-            <span className="drop-icon">⬇️</span>
+            <span className="drop-icon"><Icon name="download" /></span>
             <b>Drop it — we pick the tool</b>
             <small>PDFs → Merge PDF · Images → Images to PDF</small>
           </div>

@@ -5,6 +5,7 @@ import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { SEO, PAGES, SITE, HOWTO } from '../src/seo.js'
 import { TOOL_META } from '../src/catalog.js'
+import { iconSvg } from '../src/icons.js'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(root, 'dist')
@@ -34,7 +35,7 @@ const seoSection = (data, id) => {
   const links = rel.length
     ? `<h2 class="seo-h">Related tools</h2>` +
       `<div class="seo-rel">${rel
-        .map((t) => `<a href="/${t.id}"><span aria-hidden="true">${t.icon}</span> ${esc(t.title)}</a>`)
+        .map((t) => `<a href="/${t.id}">${iconSvg(t.icon)} ${esc(t.title)}</a>`)
         .join('')}</div>`
     : ''
   return `<section class="seo"><p class="seo-lead">${esc(data.intro)}</p>${steps}${faq}${links}</section>`
@@ -43,8 +44,8 @@ const seoSection = (data, id) => {
 const toolBody = (meta, data) => `
 <main>
   <div class="shell">
-    <button class="back rise" type="button">← All tools</button>
-    <h1 class="rise">${meta.icon} ${esc(meta.title)}</h1>
+    <button class="back rise" type="button">${iconSvg('arrowLeft')} All tools</button>
+    <h1 class="rise">${iconSvg(meta.icon)} ${esc(meta.title)}</h1>
     <p class="lead rise">${esc(meta.desc)}</p>
     <div class="panel rise"></div>
     ${seoSection(data, meta.id)}
@@ -62,7 +63,7 @@ const homeBody = (data) => `
     <div class="tools">
       ${TOOL_META.map(
         (t) =>
-          `<a class="tool" href="/${t.id}"><div class="ico">${t.icon}</div><h3>${esc(
+          `<a class="tool" href="/${t.id}"><div class="ico">${iconSvg(t.icon)}</div><h3>${esc(
             t.title,
           )}</h3><p>${esc(t.desc)}</p></a>`,
       ).join('\n      ')}
