@@ -238,7 +238,7 @@ Search Console.
 
 ## 👨‍💻 Built by
 
-**Shivam Kumar** — <shivamayeman25@gmail.com>
+**Shivam Kumar** 
 
 ## 📄 License
 
